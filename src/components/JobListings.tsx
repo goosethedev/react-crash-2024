@@ -1,10 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaMapMarker } from "react-icons/fa";
+import Spinner from "./Spinner";
 
-import jobs from "../assets/data/jobs.json";
+type Job = {
+  id: string;
+  title: string;
+  type: string;
+  description: string;
+  location: string;
+  salary: string;
+  company: {
+    name: string;
+    description: string;
+    contactEmail: string;
+    contactPhone: string;
+  };
+};
 
-const JobCard = ({ job }: { job: (typeof jobs)[0] }) => {
+const JobCard = ({ job }: { job: Job }) => {
   const [expandDescription, setExpandDescription] = useState(false);
 
   let description = job.description;
@@ -40,7 +54,7 @@ const JobCard = ({ job }: { job: (typeof jobs)[0] }) => {
             {job.location}
           </div>
           <Link
-            to={`/job/${job.id}`}
+            to={`/jobs/${job.id}`}
             className="h-[36px] bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-center text-sm"
           >
             Read More
@@ -51,8 +65,27 @@ const JobCard = ({ job }: { job: (typeof jobs)[0] }) => {
   );
 };
 
-  const recentJobs = jobs.slice(0, 3);
 const JobListings = ({ isHome = false }: { isHome?: boolean }) => {
+  const [jobs, setJobs] = useState([] as Job[]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch jobs list at render
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const apiUrl = `/api/jobs${isHome ? "?_limit=3" : ""}`;
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        setJobs(data);
+      } catch (error) {
+        console.log("Error fetching jobs data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section className="px-4 py-10 bg-blue-50">
@@ -60,12 +93,16 @@ const JobListings = ({ isHome = false }: { isHome?: boolean }) => {
         <h2 className="mb-6 text-3xl font-bold text-center text-indigo-500">
           {isHome ? "Recent Jobs" : "Browse Jobs"}
         </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {/* Job list */}
-          {recentJobs.map((job) => (
-            <JobCard key={job.id} job={job} />
-          ))}
-        </div>
+        {loading ? (
+          <Spinner loading={loading} />
+        ) : (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {/* Job list */}
+            {jobs.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
