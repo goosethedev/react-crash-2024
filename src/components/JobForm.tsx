@@ -40,6 +40,7 @@ const JobForm = ({ job, formTitle, submitLabel, onSubmit }: JobFormProps) => {
       },
     };
 
+    // If a job was passed, include its ID
     if (job?.id) formJob = { ...formJob, id: job.id };
 
     // Perform the parent action with the job from the form
