@@ -1,22 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaMapMarker } from "react-icons/fa";
-import Spinner from "./Spinner";
 
-type Job = {
-  id: string;
-  title: string;
-  type: string;
-  description: string;
-  location: string;
-  salary: string;
-  company: {
-    name: string;
-    description: string;
-    contactEmail: string;
-    contactPhone: string;
-  };
-};
+import Spinner from "./Spinner";
+import { Job } from "../utils/types";
 
 const JobCard = ({ job }: { job: Job }) => {
   const [expandDescription, setExpandDescription] = useState(false);
