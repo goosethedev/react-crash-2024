@@ -10,3 +10,10 @@ export const addJob = async (job: Job) => {
   });
   return;
 }
+
+export const deleteJob = async (jobId: string) => {
+  await fetch(`/api/jobs/${jobId}`, {
+    method: "DELETE",
+  })
+  return;
+}
