@@ -1,50 +1,59 @@
-# React + TypeScript + Vite
+# React Jobs Project (YouTube)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the jobs listing project from the [React Crash Course 2024](https://youtu.be/LDB4uaJ87e0) originally made by [Traversy Media](https://www.youtube.com/@TraversyMedia) with a number of improvements.
 
-Currently, two official plugins are available:
+Check the original repository at [bradtraversy/react-crash-2024](https://github.com/bradtraversy/react-crash-2024).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<img src="public/screen.png" />
 
-## Expanding the ESLint configuration
+## Improvements
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- [pnpm](https://pnpm.io/) instead of npm.
+- TypeScript instead of raw JavaScript.
 
-- Configure the top-level `parserOptions` property like this:
+Also, a number of design choices:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Components used elsewhere only once are in the same file. e.g. `JobCard` inside `JobListings.tsx`.
+- Reused `JobForm` component at `AddJobPage` and `EditJobPage` pages.
+- Moved `jobLoader` into a separate file at `src/utils/jobLoader.ts` for better hot-reload, and includes strong typing.
+- Moved HTTP API functions from `App.tsx` to `src/services/jobService.tsx` for better [SoC](https://en.wikipedia.org/wiki/Separation_of_concerns) (naming due to Angular trauma).
+- Types at `src/utils/types.ts`.
+- `jobs.json` at `src/assets/data` instead of `src`.
+
+## Usage
+
+This project uses JSON-Server for a mock backend.
+
+### Install Dependencies
+
+```bash
+pnpm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Run JSON Server
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+The server will run on http://localhost:6969
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+pnpm run server
+```
+
+### Run Vite Frontend
+
+React will run on http://localhost:3000
+
+```bash
+pnpm dev
+```
+
+### Build for Production
+
+```bash
+pnpm build
+```
+
+### Preview Production Build
+
+```bash
+pnpm preview
 ```
